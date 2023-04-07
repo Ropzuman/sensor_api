@@ -12,7 +12,7 @@ def get_all_sensors(db: Session):
 def read_sensor_by_id(db: Session, id: int):
     sensor = db.query(models.Sensor).filter(models.Sensor.id == id).first()
     if sensor is None:
-        raise HTTPException(status_code=404, detail="Sensor not found")
+        raise HTTPException(status_code=404, detail="band not found")
     return sensor
 
 
