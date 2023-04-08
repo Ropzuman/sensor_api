@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class SensorBase(BaseModel):
+    name: str
     section: str
     status: str | None = None
 
@@ -30,7 +31,15 @@ class SensorDB(SensorBase):
     measurements: list[SensorData]
 
 
+class SectionBase(SensorBase):
+    section: str
+
+    class Config:
+        orm_mode = True
+
+
 class AllSensors(BaseModel):
+    name: str
     section: str
     status: str
     id: int
