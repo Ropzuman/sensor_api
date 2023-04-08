@@ -10,14 +10,14 @@ from ..database.sensors_crud import (
     read_sensor_by_id,
 )
 
-router = APIRouter(prefix="/measurements")
+router = APIRouter(prefix="/Sensors")
 
 
-@router.get("/", response_model=AllSensors)
-def get_all_sensors(db: Session = Depends(get_db)):
+@router.get("", response_model=AllSensors)
+def read_sensors(db: Session = Depends(get_db)):
     return get_all_sensors(db)
 
 
 @router.get("/{id}", response_model=SensorDB)
-def read_sensor_by_id(id: int, db: Session = Depends(get_db)):
-    return read_sensor_by_id(id, db)
+def read_sensors_by_id(id: int, db: Session = Depends(get_db)):
+    return read_sensor_by_id(db, id)
