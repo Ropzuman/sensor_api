@@ -19,6 +19,11 @@ class SensorData(BaseModel):
         orm_mode = True
 
 
+class DataDB(SensorData):
+    class Config:
+        orm_mode = True
+
+
 class SensorDB(SensorBase):
     id: int
     measurements: list[SensorData]
@@ -28,6 +33,7 @@ class SensorDB(SensorBase):
 
 
 class AllSensors(BaseModel):
+    id: int
     sensors: list[SensorDB]
 
     class Config:
