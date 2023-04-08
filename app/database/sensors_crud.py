@@ -32,9 +32,9 @@ def create_sensor(sensor_in: SensorBase, db: Session):
     return sensor
 
 
-def add_measurement(db: Session, id: int, measurement: SensorData):
-    rel = models.Measurement(**measurement.dict(), sensor_id=id)
-    db.add(rel)
-    db.commit()
-    db.refresh(rel)
-    return rel
+# def add_measurement(db: Session, id: int, measurement: SensorData):
+#     rel = models.Measurement(**measurement.dict(), sensor_id=id)
+#     db.add(rel)
+#     db.commit()
+#     db.refresh(rel)
+#     return rel

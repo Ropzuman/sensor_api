@@ -7,9 +7,9 @@ from .database import Base
 class Sensor(Base):
     __tablename__ = "sensors"
 
+    id = Column(Integer, primary_key=True, index=True)
     section = Column(String, nullable=False)
     status = Column(String, nullable=False)
-    id = Column(Integer, primary_key=True, index=True)
 
     measurements = relationship("Measurement", back_populates="sensor")
 
