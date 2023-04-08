@@ -23,6 +23,11 @@ def read_sensors_by_id(id: int, db: Session = Depends(get_db)):
     return read_sensor_by_id(db, id)
 
 
+@router.get("/{section}", response_model=SensorDB)
+def read_sensors_by_section(section: str, db: Session = Depends(get_db)):
+    return read_sensor_by_section(db, section)
+
+
 @router.post("", response_model=SensorDB)
 def create_sensors(sensor: SensorBase, db: Session = Depends(get_db)):
     return create_sensor(db, sensor)
