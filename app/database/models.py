@@ -8,8 +8,8 @@ class Sensor(Base):
     __tablename__ = "sensors"
 
     id = Column(Integer, primary_key=True, index=True)
-    section = Column(String, unique=True, index=True)
-    status = Column(String)
+    section = Column(String, nullable=False)
+    status = Column(String, nullable=False)
 
     measurements = relationship("Measurement", back_populates="sensor")
 
