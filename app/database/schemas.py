@@ -5,14 +5,14 @@ from pydantic import BaseModel
 
 class SensorBase(BaseModel):
     section: str
-    status: str
+    status: str | None = None
 
     class Config:
         orm_mode = True
 
 
 class SensorData(BaseModel):
-    sensor_id: int
+    id: int
     timestamp: datetime.datetime
     temperature: int
 
@@ -29,13 +29,11 @@ class SensorDB(SensorBase):
     id: int
     measurements: list[SensorData]
 
-    class Config:
-        orm_mode = True
-
 
 class AllSensors(BaseModel):
-    id: int
     section: str
+    status: str
+    id: int
 
     class Config:
         orm_mode = True

@@ -14,10 +14,10 @@ from ..database.sensors_crud import (
 router = APIRouter(prefix="/Sensors")
 
 
-@router.get("", response_model=AllSensors)
-def read_sensors(id: int, db: Session = Depends(get_db)):
-    if id == int:
-        return read_sensor_by_id(db, id)
+@router.get("", response_model=list[AllSensors])
+def read_sensors(section: str = "", db: Session = Depends(get_db)):
+    if section != "":
+        return read_sensor_by_section(db, section)
     return get_all_sensors(db)
 
 
@@ -32,8 +32,8 @@ def read_sensors_by_section(section: str, db: Session = Depends(get_db)):
 
 
 @router.post("", response_model=SensorDB)
-def create_sensors(sensor: SensorBase, db: Session = Depends(get_db)):
-    return create_sensor(db, sensor)
+def create_sensors(sensor_in: SensorBase, db: Session = Depends(get_db)):
+    return create_sensor(sensor_in, db)
 
 
 @router.post("/{id}", response_model=DataDB)
