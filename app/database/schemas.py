@@ -1,4 +1,5 @@
 import datetime
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -21,6 +22,30 @@ class SensorData(BaseModel):
         orm_mode = True
 
 
+class SectionBase(SensorBase):
+    section: str
+
+    class Config:
+        orm_mode = True
+
+
+class StatusBase(BaseModel):
+    name: str
+    section: str
+    status: str
+
+    class Config:
+        orm_mode = True
+
+
+class StatusDB(StatusBase):
+    status: str
+    measurements: list[StatusBase]
+
+    class Config:
+        orm_mode = True
+
+
 class DataDB(SensorData):
     class Config:
         orm_mode = True
@@ -31,13 +56,6 @@ class SensorDB(SensorBase):
     measurements: list[SensorData]
 
 
-class SectionBase(SensorBase):
-    section: str
-
-    class Config:
-        orm_mode = True
-
-
 class AllSensors(BaseModel):
     name: str
     section: str
@@ -46,3 +64,8 @@ class AllSensors(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+# class StatusUpdate(BaseModel):
+#     name: Optional[str] = None
+#     status: Optional[str] = None

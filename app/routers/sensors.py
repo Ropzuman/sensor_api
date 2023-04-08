@@ -1,9 +1,10 @@
 from datetime import datetime, time, timedelta
 
 from fastapi import APIRouter, Depends
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
-from ..database.database import get_db
+from ..database.database import engine, get_db
 from ..database.schemas import (
     AllSensors,
     DataDB,
@@ -11,13 +12,17 @@ from ..database.schemas import (
     SensorBase,
     SensorData,
     SensorDB,
+    StatusBase,
+    StatusDB,
 )
-from ..database.sensors_crud import create_sensor  # add_measurement,
 from ..database.sensors_crud import (
+    create_sensor,
     get_all_sensors,
     read_sensor_by_id,
     read_sensor_by_name,
     read_sensor_by_section,
+    read_sensor_by_status,
+    update_sensor_status,
 )
 
 router = APIRouter(prefix="/Sensors")
@@ -40,6 +45,16 @@ def read_sensors_by_id(id: int, db: Session = Depends(get_db)):
     return read_sensor_by_id(db, id)
 
 
+@router.get("/status/{status}", response_model=list[StatusBase])
+def read_sensors_by_status(status: str, db: Session = Depends(get_db)):
+    return read_sensor_by_status(db, status)
+
+
 @router.post("", response_model=SensorDB)
 def create_sensors(sensor_in: SensorBase, db: Session = Depends(get_db)):
     return create_sensor(sensor_in, db)
+
+
+@router.put("/status/{name}", response_model=StatusDB)
+def update_status(name: str, status_in: str, db: Session = Depends(get_db)):
+    return update_sensor_status(db, name, status_in)
