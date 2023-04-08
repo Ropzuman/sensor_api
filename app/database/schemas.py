@@ -12,6 +12,7 @@ class SensorBase(BaseModel):
 
 
 class SensorData(BaseModel):
+    sensor_id: int
     timestamp: datetime.datetime
     temperature: int
 
@@ -34,7 +35,7 @@ class SensorDB(SensorBase):
 
 class AllSensors(BaseModel):
     id: int
-    sensors: list[SensorDB]
+    section: str
 
     class Config:
         orm_mode = True

@@ -14,7 +14,9 @@ router = APIRouter(prefix="/Sensors")
 
 
 @router.get("", response_model=AllSensors)
-def read_sensors(db: Session = Depends(get_db)):
+def read_sensors(id: int = 0, db: Session = Depends(get_db)):
+    if id != 0:
+        return read_sensor_by_id(db, id)
     return get_all_sensors(db)
 
 
@@ -31,3 +33,8 @@ def read_sensors_by_section(section: str, db: Session = Depends(get_db)):
 @router.post("", response_model=SensorDB)
 def create_sensors(sensor: SensorBase, db: Session = Depends(get_db)):
     return create_sensor(db, sensor)
+
+
+@router.post("/{id}", response_model=SensorDB)
+def add_measurement(id: int, measurement: SensorData, db: Session = Depends(get_db)):
+    return add_measurement(id, measurement, db)
