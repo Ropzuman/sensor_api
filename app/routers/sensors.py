@@ -55,6 +55,6 @@ def create_sensors(sensor_in: SensorBase, db: Session = Depends(get_db)):
     return create_sensor(sensor_in, db)
 
 
-@router.patch("/status", response_model=StatusDB)
-def update_status(status: StatusDB, db: Session = Depends(get_db)):
+@router.patch("/status", response_model=SensorBase)
+def update_status(status: SensorBase, db: Session = Depends(get_db)):
     return update_sensor_status(status, db)
