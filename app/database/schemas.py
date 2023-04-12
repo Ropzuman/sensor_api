@@ -5,9 +5,10 @@ from pydantic import BaseModel
 
 
 class SensorBase(BaseModel):
-    name: str
-    section: str
+    name: str | None = None
+    section: str | None = None
     status: str | None = None
+    id: int | None = None
 
     class Config:
         orm_mode = True
@@ -29,18 +30,19 @@ class SectionBase(SensorBase):
         orm_mode = True
 
 
-class StatusBase(BaseModel):
-    name: str
-    section: str
-    status: str
+class StatusBase(SensorBase):
+    # name: str | None = None
+    # section: str | None = None
+    # status: str | None = None
 
     class Config:
         orm_mode = True
 
 
 class StatusDB(StatusBase):
+    id: int
     status: str
-    measurements: list[StatusBase]
+    # measurements: list[StatusBase]
 
     class Config:
         orm_mode = True
@@ -64,8 +66,3 @@ class AllSensors(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-# class StatusUpdate(BaseModel):
-#     name: Optional[str] = None
-#     status: Optional[str] = None

@@ -1,8 +1,9 @@
 from fastapi import HTTPException
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from . import models
-from .schemas import SensorBase, SensorData, StatusDB
+from .schemas import SensorBase, SensorData, SensorDB, StatusBase, StatusDB
 
 
 def get_all_sensors(db: Session):
@@ -45,3 +46,19 @@ def create_sensor(sensor_in: SensorBase, db: Session):
     db.commit()
     db.refresh(sensor)
     return sensor
+
+
+# def update_sensor_status(status: SensorBase, db: Session):
+#     status = SensorBase(**status.dict())
+#     update_status = status.dict(exclude_unset=True)
+#     updated_status = status.copy(update=update_status)
+#     SensorBase.status = jsonable_encoder(updated_status)
+#     return updated_status
+
+
+def update_sensor_status(status: StatusDB, db: Session):
+    new_Status = StatusBase(**status.dict())
+    update_status = new_Status.dict(exclude_unset=True)
+    updated_status = new_Status.copy(update=update_status)
+    SensorBase.status = jsonable_encoder(updated_status)
+    return updated_status

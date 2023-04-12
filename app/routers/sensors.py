@@ -16,12 +16,13 @@ from ..database.schemas import (
     StatusDB,
 )
 from ..database.sensors_crud import (
-    create_sensor,  # update_sensor_status,
+    create_sensor,
     get_all_sensors,
     read_sensor_by_id,
     read_sensor_by_name,
     read_sensor_by_section,
     read_sensor_by_status,
+    update_sensor_status,
 )
 
 router = APIRouter(prefix="/Sensors")
@@ -52,3 +53,8 @@ def read_sensors_by_status(status: str, db: Session = Depends(get_db)):
 @router.post("", response_model=SensorDB)
 def create_sensors(sensor_in: SensorBase, db: Session = Depends(get_db)):
     return create_sensor(sensor_in, db)
+
+
+@router.patch("/status", response_model=StatusDB)
+def update_status(status: StatusDB, db: Session = Depends(get_db)):
+    return update_sensor_status(status, db)
