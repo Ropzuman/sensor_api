@@ -2,6 +2,7 @@ from fastapi import FastAPI
 
 from .database import models
 from .database.database import engine
+from .database.schemas import StatusDB
 from .routers import measurements, sensors
 
 models.Base.metadata.create_all(bind=engine)

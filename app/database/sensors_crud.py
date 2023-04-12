@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from . import models
-from .schemas import SensorBase, SensorData
+from .schemas import SensorBase, SensorData, StatusDB
 
 
 def get_all_sensors(db: Session):
@@ -45,6 +45,3 @@ def create_sensor(sensor_in: SensorBase, db: Session):
     db.commit()
     db.refresh(sensor)
     return sensor
-
-
-def update_sensor_status(db: Session, name: str, status_in: str):
