@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
+from ..database import models
 from ..database.database import engine, get_db
 from ..database.schemas import (
     AllSensors,
@@ -21,7 +22,7 @@ from ..database.sensors_crud import (
     read_sensor_by_name,
     read_sensor_by_section,
     read_sensor_by_status,
-    update_sensor_status,
+    update_sensor,
 )
 
 router = APIRouter(prefix="/Sensors")
@@ -54,6 +55,6 @@ def create_sensors(sensor_in: SensorBase, db: Session = Depends(get_db)):
     return create_sensor(sensor_in, db)
 
 
-@router.patch("/status", response_model=SensorBase)
-def update_status(id: int, status: SensorBase, db: Session = Depends(get_db)):
-    return update_sensor_status(id, status, db)
+@router.patch("/{id}")
+def update_sensors(id: int, sensorbase: SensorBase, db: Session = Depends(get_db)):
+    return update_sensor(id, sensorbase, db)
