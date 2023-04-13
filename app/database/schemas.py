@@ -8,10 +8,6 @@ class SensorBase(BaseModel):
     name: str | None = None
     section: str | None = None
     status: str | None = None
-    id: int | None = None
-
-    class Config:
-        orm_mode = True
 
 
 class SensorData(BaseModel):
@@ -19,30 +15,16 @@ class SensorData(BaseModel):
     timestamp: datetime.datetime
     temperature: int
 
-    class Config:
-        orm_mode = True
 
-
-class SectionBase(SensorBase):
+class SectionDB(SensorBase):
     section: str
 
     class Config:
         orm_mode = True
 
 
-class StatusBase(SensorBase):
-    # name: str | None = None
-    # section: str | None = None
-    # status: str | None = None
-
-    class Config:
-        orm_mode = True
-
-
-class StatusDB(StatusBase):
-    id: int
+class StatusDB(SensorBase):
     status: str
-    # measurements: list[StatusBase]
 
     class Config:
         orm_mode = True
@@ -55,7 +37,9 @@ class DataDB(SensorData):
 
 class SensorDB(SensorBase):
     id: int
-    measurements: list[SensorData]
+
+    class Config:
+        orm_mode = True
 
 
 class AllSensors(BaseModel):
