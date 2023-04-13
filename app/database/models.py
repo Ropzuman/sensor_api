@@ -1,3 +1,5 @@
+from datetime import datetime, time, timedelta
+
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -8,6 +10,7 @@ class Sensor(Base):
     __tablename__ = "sensors"
 
     id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
     section = Column(String, nullable=False)
     status = Column(String, nullable=False)
 
@@ -19,7 +22,8 @@ class Measurement(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     sensor_id = Column(Integer, ForeignKey("sensors.id"))
-    value = Column(Integer)
-    timestamp = Column(String)
+    temperature = float
+    timestamp = datetime
+    timestamp = id
 
     sensor = relationship("Sensor", back_populates="measurements")
