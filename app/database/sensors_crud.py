@@ -48,9 +48,10 @@ def create_sensor(sensor_in: SensorBase, db: Session):
     return sensor
 
 
-# def update_sensor_status(status: SensorBase, db: Session):
-#     status = SensorBase(**status.dict())
-#     update_status = SensorBase.status.update(status.dict(exclude_unset=True))
-#     updated_status = status.copy(update=update_status)
-#     SensorBase.status = jsonable_encoder(updated_status)
-#     return updated_status
+def update_sensor_status(id: int, status: SensorBase, db: Session):
+    stored_status = status.dict()
+    stored_model = SensorBase(**stored_status)
+    update_status = status.dict(exclude_unset=True)
+    updated_status = stored_model.copy(update=update_status)
+    status = jsonable_encoder(updated_status)
+    return status

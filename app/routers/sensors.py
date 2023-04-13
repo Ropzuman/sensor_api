@@ -14,13 +14,14 @@ from ..database.schemas import (
     SensorDB,
     StatusDB,
 )
-from ..database.sensors_crud import create_sensor  # update_sensor_status,
 from ..database.sensors_crud import (
+    create_sensor,
     get_all_sensors,
     read_sensor_by_id,
     read_sensor_by_name,
     read_sensor_by_section,
     read_sensor_by_status,
+    update_sensor_status,
 )
 
 router = APIRouter(prefix="/Sensors")
@@ -53,6 +54,6 @@ def create_sensors(sensor_in: SensorBase, db: Session = Depends(get_db)):
     return create_sensor(sensor_in, db)
 
 
-# @router.patch("/status", response_model=SensorBase)
-# def update_status(status: SensorBase, db: Session = Depends(get_db)):
-#     return update_sensor_status(status, db)
+@router.patch("/status", response_model=SensorBase)
+def update_status(id: int, status: SensorBase, db: Session = Depends(get_db)):
+    return update_sensor_status(id, status, db)
