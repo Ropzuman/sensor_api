@@ -59,14 +59,6 @@ class DataDB(SensorData):
         fields = {"sensor_id": {"exclude": True}}
 
 
-class DatainSensor(BaseModel):
-    temperature: int
-    timestamp: datetime.datetime
-
-    class Config:
-        orm_mode = True
-
-
 class SensorDB(SensorBase):
     id: int
     name: str
@@ -78,7 +70,6 @@ class SensorDB(SensorBase):
 
 class AllSensors(SensorBase):
     id: int
-    # measurements: List[SensorData] = []
 
     class Config:
         orm_mode = True
