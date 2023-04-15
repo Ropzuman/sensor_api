@@ -1,9 +1,10 @@
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
 from . import models
-from .schemas import SensorBase, SensorData, SensorDB, StatusDB
+from .schemas import SensorBase, SensorData, SensorDataDB, SensorDB, StatusDB
 
 
 def get_all_sensors(db: Session):
@@ -19,12 +20,13 @@ def read_sensor_by_id(db: Session, id: int):
 
 def read_sensor_by_name(db: Session, name: str):
     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
+
     if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
     return sensor
 
 
-def read_sensor_by_section(db: Session, section: str):
+def read_sensor_by_section(section: str, db: Session):
     sensor = db.query(models.Sensor).filter(models.Sensor.section == section).all()
 
     if sensor is None:

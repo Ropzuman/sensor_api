@@ -3,6 +3,8 @@ from typing import List
 
 from pydantic import BaseModel
 
+from . import models
+
 
 class SensorBase(BaseModel):
     name: str
@@ -24,6 +26,7 @@ class SensorData(BaseModel):
 
 class SectionDB(SensorBase):
     section: str
+    measurements: list[SensorData] = []
 
     class Config:
         orm_mode = True

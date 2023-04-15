@@ -36,7 +36,7 @@ def read_sensors(name: str = "", db: Session = Depends(get_db)):
 
 @router.get("/section/{section}", response_model=list[SectionDB])
 def read_sensors_by_section(section: str, db: Session = Depends(get_db)):
-    return read_sensor_by_section(db, section)
+    return read_sensor_by_section(section, db)
 
 
 @router.get("/{id}", response_model=SensorDB)
