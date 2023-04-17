@@ -13,6 +13,7 @@ class Sensor(Base):
     name = Column(String)
     section = Column(String)
     status = Column(String)
+    status_timestamp = Column(String, default=datetime.utcnow)
 
     measurements = relationship("Measurement", back_populates="sensor")
 

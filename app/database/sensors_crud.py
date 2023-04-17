@@ -13,6 +13,7 @@ from .schemas import (
     SensorPatchDB,
     StatusData,
     StatusDB,
+    StatusPatchDB,
 )
 
 
@@ -72,7 +73,7 @@ def update_sensor(name: str, sensorbase: SensorPatchDB, db: Session):
     return sensor
 
 
-def update_status(name: str, status: StatusData, db: Session):
+def update_status(name: str, status: StatusPatchDB, db: Session):
     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
     if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")

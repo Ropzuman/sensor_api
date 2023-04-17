@@ -8,7 +8,6 @@ from ..database.database import engine, get_db
 from ..database.schemas import (
     AllSensors,
     DataDB,
-    IdDB,
     SectionDB,
     SensorBase,
     SensorData,
@@ -16,6 +15,7 @@ from ..database.schemas import (
     SensorPatchDB,
     StatusData,
     StatusDB,
+    StatusPatchDB,
 )
 from ..database.sensors_crud import (
     create_sensor,
@@ -43,12 +43,12 @@ def read_sensors_by_section(section: str, db: Session = Depends(get_db)):
     return read_sensor_by_section(section, db)
 
 
-@router.get("/Sensor status changes/{name}", response_model=list[IdDB])
+@router.get("/{name}", response_model=list[StatusPatchDB])
 def read_sensors_by_status_change(name: str, db: Session = Depends(get_db)):
     return read_sensor_by_status_change(name, db)
 
 
-@router.get("/status/{status}", response_model=list[SensorBase])
+@router.get("/status/{status}", response_model=list[StatusDB])
 def read_sensors_by_status(status: str, db: Session = Depends(get_db)):
     return read_sensor_by_status(status, db)
 
@@ -65,6 +65,6 @@ def update_sensors(name: str, sensorbase: SensorPatchDB, db: Session = Depends(g
 
 @router.patch("/status/{name}")
 def update_sensors_status(
-    name: str, statusdb: StatusData, db: Session = Depends(get_db)
+    name: str, statusdb: StatusPatchDB, db: Session = Depends(get_db)
 ):
     return update_status(name, statusdb, db)

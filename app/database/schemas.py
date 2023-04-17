@@ -26,7 +26,7 @@ class SensorData(BaseModel):
 
 class StatusData(BaseModel):
     status: str
-    timestamp: datetime.datetime
+    status_timestamp: datetime.datetime
 
     class Config:
         orm_mode = True
@@ -48,16 +48,17 @@ class SectionDB(SensorBase):
         orm_mode = True
 
 
-class StatusDB(StatusData):
-    status: str
+class StatusPatchDB(StatusData):
+    status_list: list[StatusData] = []
 
     class Config:
         orm_mode = True
 
 
-class IdDB(SensorBase):
+class StatusDB(StatusData):
     name: str
-    status: list[StatusDB] = []
+    status: str
+    status_timestamp: datetime.datetime
 
     class Config:
         orm_mode = True
