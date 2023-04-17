@@ -24,6 +24,22 @@ class SensorData(BaseModel):
         orm_mode = True
 
 
+class StatusData(BaseModel):
+    status: str
+    timestamp: datetime.datetime
+
+    class Config:
+        orm_mode = True
+
+
+class SensorPatchDB(BaseModel):
+    name: str
+    section: str
+
+    class Config:
+        orm_mode = True
+
+
 class SectionDB(SensorBase):
     section: str
     measurements: list[SensorData] = []
@@ -32,8 +48,16 @@ class SectionDB(SensorBase):
         orm_mode = True
 
 
-class StatusDB(SensorBase):
+class StatusDB(StatusData):
     status: str
+
+    class Config:
+        orm_mode = True
+
+
+class IdDB(SensorBase):
+    name: str
+    status: list[StatusDB] = []
 
     class Config:
         orm_mode = True
