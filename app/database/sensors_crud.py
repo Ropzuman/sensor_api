@@ -1,10 +1,10 @@
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import func
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, relationship
 
 from . import models
-from .schemas import SensorBase, SensorData, SensorDataDB, SensorDB, StatusDB
+from .schemas import SectionDB, SensorBase, SensorData, SensorDataDB, SensorDB, StatusDB
 
 
 def get_all_sensors(db: Session):
@@ -27,16 +27,22 @@ def read_sensor_by_name(db: Session, name: str):
 
 
 def read_sensor_by_section(section: str, db: Session):
-    sensor = db.query(models.Sensor).filter(models.Sensor.section == section).all()
-
-    data = (
-        db.query(
-            models.Measurement,
-            func.array(models.Measurement.timestamp).label("timestamp"),
-        )
-        .filter(models.Measurement.sensor_id == sensor[0].id)
+    sensor = (
+        db.query(models.Sensor)
+        .filter(models.Sensor.section == section)
+        .options(models.Measurement)
+        .order_by(models.Measurement.timestamp.load_only("timestamp"))
         .all()
     )
+    # reading = (
+    #     db.query(models.Measurement)
+    #     .filter(models.Measurement.timestamp == section)
+    #     .all()
+    # )
+    # reading_list = []
+    # for i in reading:
+    #     reading_list.append(i.timestamp)
+    #     sensor = reading_list[1]
 
     if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")

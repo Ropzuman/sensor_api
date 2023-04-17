@@ -22,14 +22,14 @@ def get_all_measurements(db: Session):
 
 
 def get_measurement_by_id(db: Session, id: int):
-    rel = db.query(models.Measurement).filter(models.Measurement.id == id).first()
+    rel = db.query(models.Measurement).filter(models.Measurement.id == id).all()
     if not rel:
         raise HTTPException(status_code=404, detail="Measurement not found")
     return rel
 
 
 def delete_measurement_by_id(id: datetime.datetime, db: Session):
-    rel = db.query(models.Measurement).filter(models.Measurement.id == id).first()
+    rel = db.query(models.Measurement).filter(models.Measurement.id == id).all()
     if not rel:
         raise HTTPException(status_code=404, detail="Measurement not found")
     db.delete(rel)
