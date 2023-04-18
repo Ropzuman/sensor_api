@@ -23,7 +23,6 @@ from ..database.sensors_crud import (
     read_sensor_by_name,
     read_sensor_by_section,
     read_sensor_by_status,
-    read_sensor_by_status_change,
     update_sensor,
     update_status,
 )
@@ -41,11 +40,6 @@ def read_sensors(name: str = "", db: Session = Depends(get_db)):
 @router.get("/section/{section}", response_model=list[SectionDB])
 def read_sensors_by_section(section: str, db: Session = Depends(get_db)):
     return read_sensor_by_section(section, db)
-
-
-@router.get("/{name}", response_model=list[StatusPatchDB])
-def read_sensors_by_status_change(name: str, db: Session = Depends(get_db)):
-    return read_sensor_by_status_change(name, db)
 
 
 @router.get("/status/{status}", response_model=list[StatusDB])

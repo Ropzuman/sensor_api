@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import func
 from sqlalchemy.orm import Session, relationship
@@ -21,13 +21,6 @@ def get_all_sensors(db: Session):
     return db.query(models.Sensor).all()
 
 
-def read_sensor_by_status_change(name: str, db: Session):
-    sensor = db.query(models.Sensor).filter(models.Sensor.name == name).all()
-    if sensor is None:
-        raise HTTPException(status_code=404, detail="Sensor not found")
-    return sensor
-
-
 def read_sensor_by_name(db: Session, name: str):
     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
 
@@ -36,11 +29,39 @@ def read_sensor_by_name(db: Session, name: str):
     return sensor
 
 
-def read_sensor_by_section(section: str, db: Session):
-    sensor = db.query(models.Sensor).filter(models.Sensor.section == section).all()
+# def read_sensor_by_section(section: str, db: Session):
+#     sensor = db.query(models.Sensor).filter(models.Sensor.section == section).all()
 
-    if sensor is None:
-        raise HTTPException(status_code=404, detail="Sensor not found")
+#     if sensor is None:
+#         raise HTTPException(status_code=404, detail="Sensor not found")
+#     return sensor
+
+
+def read_sensor_by_section(section: str, db: Session):
+    subq = (
+        db.query(
+            models.Sensor.id,
+            func.max(models.Measurement.timestamp).label("max_timestamp"),
+        )
+        .group_by(models.Measurement.sensor_id)
+        .subquery()
+    )
+    sensor = (
+        db.query(models.Sensor, models.Sensor.measurements)
+        .join(subq, models.Sensor.id == subq.c.sensor_id)
+        .join(models.Sensor, models.Measurement.sensor_id == models.Sensor.id)
+        .filter(
+            models.Sensor.section == section,
+            models.Measurement.timestamp == subq.c.max_timestamp,
+        )
+        .all()
+    )
+
+    if not sensor:
+        raise HTTPException(
+            status_code=404, detail="No sensors found for the given section"
+        )
+
     return sensor
 
 
@@ -54,6 +75,15 @@ def read_sensor_by_status(status: str, db: Session):
 
 def create_sensor(sensor_in: SensorBase, db: Session):
     sensor = models.Sensor(**sensor_in.dict())
+    existing_sensor = (
+        db.query(models.Sensor).filter(models.Sensor.name == sensor.name).first()
+    )
+
+    if existing_sensor is not None:
+        raise HTTPException(
+            status_code=400, detail="Sensor with this name already exists"
+        )
+
     db.add(sensor)
     db.commit()
     db.refresh(sensor)
