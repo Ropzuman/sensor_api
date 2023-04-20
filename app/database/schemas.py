@@ -3,6 +3,8 @@ from typing import List
 
 from pydantic import BaseModel
 
+from . import models
+
 
 class SensorBase(BaseModel):
     name: str
@@ -22,15 +24,41 @@ class SensorData(BaseModel):
         orm_mode = True
 
 
-class SectionDB(SensorBase):
+class StatusData(BaseModel):
+    status: str
+    status_timestamp: datetime.datetime
+
+    class Config:
+        orm_mode = True
+
+
+class SensorPatchDB(BaseModel):
+    name: str
     section: str
 
     class Config:
         orm_mode = True
 
 
-class StatusDB(SensorBase):
+class SectionDB(SensorBase):
+    section: str
+    measurements: list[SensorData] = []
+
+    class Config:
+        orm_mode = True
+
+
+class StatusPatchDB(StatusData):
+    status_list: list[StatusData] = []
+
+    class Config:
+        orm_mode = True
+
+
+class StatusDB(StatusData):
+    name: str
     status: str
+    status_timestamp: datetime.datetime
 
     class Config:
         orm_mode = True
@@ -59,14 +87,6 @@ class DataDB(SensorData):
         fields = {"sensor_id": {"exclude": True}}
 
 
-class DatainSensor(BaseModel):
-    temperature: int
-    timestamp: datetime.datetime
-
-    class Config:
-        orm_mode = True
-
-
 class SensorDB(SensorBase):
     id: int
     name: str
@@ -78,7 +98,6 @@ class SensorDB(SensorBase):
 
 class AllSensors(SensorBase):
     id: int
-    # measurements: List[SensorData] = []
 
     class Config:
         orm_mode = True

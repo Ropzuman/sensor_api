@@ -23,11 +23,6 @@ def get_measurements(db: Session = Depends(get_db)):
     return crud.get_all_measurements(db)
 
 
-@router.get("/{id}", response_model=DataDB)
-def measurement_by_id(id: int, db: Session = Depends(get_db)):
-    return crud.get_measurement_by_id(db, id)
-
-
 @router.post("/{id}/measurements", response_model=DataDB)
 def add_measurement(
     id: int, temperature_in: SensorDataDB, db: Session = Depends(get_db)
