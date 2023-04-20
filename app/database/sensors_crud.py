@@ -38,30 +38,7 @@ def read_sensor_by_name(db: Session, name: str):
 
 
 def read_sensor_by_section(section: str, db: Session):
-    subq = (
-        db.query(
-            models.Sensor.id,
-            func.max(models.Measurement.timestamp).label("max_timestamp"),
-        )
-        .group_by(models.Measurement.sensor_id)
-        .subquery()
-    )
-    sensor = (
-        db.query(models.Sensor, models.Sensor.measurements)
-        .join(subq, models.Sensor.id == subq.c.sensor_id)
-        .join(models.Sensor, models.Measurement.sensor_id == models.Sensor.id)
-        .filter(
-            models.Sensor.section == section,
-            models.Measurement.timestamp == subq.c.max_timestamp,
-        )
-        .all()
-    )
-
-    if not sensor:
-        raise HTTPException(
-            status_code=404, detail="No sensors found for the given section"
-        )
-
+    sensor = db.query(models.Sensor).filter(models.Sensor.section == section).all()
     return sensor
 
 
