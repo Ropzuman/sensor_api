@@ -6,16 +6,7 @@ from sqlalchemy import desc, func
 from sqlalchemy.orm import Session
 
 from . import models
-from .schemas import (
-    DataDB,
-    DataIn,
-    SectionDB,
-    SensorBase,
-    SensorData,
-    SensorDataDB,
-    SensorDB,
-    StatusDB,
-)
+from .schemas import SectionDB, SensorDataDB
 
 
 def get_all_measurements(db: Session):
