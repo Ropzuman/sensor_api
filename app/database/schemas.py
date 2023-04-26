@@ -87,16 +87,14 @@ class DataDB(SensorData):
 
 
 class SensorDB(SensorBase):
-    id: int
-    name: str
-    measurements: List[SensorData] = []
+    pass
 
     class Config:
         orm_mode = True
 
 
 class AllSensors(SensorBase):
-    id: int
+    pass
 
     class Config:
         orm_mode = True
