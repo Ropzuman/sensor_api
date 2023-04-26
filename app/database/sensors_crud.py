@@ -24,7 +24,7 @@ def read_sensor_by_name(name: str, db: Session):
             .filter(models.Measurement.sensor_id == sensor.id)
             .order_by(models.Measurement.timestamp.desc())
             .limit(10)
-            .first()
+            .all()
         )
 
         result = []

@@ -87,7 +87,7 @@ class DataDB(SensorData):
 
 
 class SensorDB(SensorBase):
-    measurements: SensorData
+    measurements: List[SensorData] = []
 
     class Config:
         orm_mode = True
