@@ -40,8 +40,34 @@ def read_sensor_by_name(name: str, db: Session):
         return result
 
 
+# def read_sensor_by_section(section: str, db: Session):
+#     result = []
+#     for sensor in (
+#         db.query(models.Sensor).filter(models.Sensor.section == section).all()
+#     ):
+#         latest_reading = (
+#             db.query(models.Measurement)
+#             .filter(models.Measurement.sensor_id == sensor.id)
+#             .order_by(models.Measurement.timestamp.desc())
+#             .first()
+#         )
+
+#         sensor_data = {
+#             "name": sensor.name,
+#             "section": sensor.section,
+#             "status": sensor.status,
+#             "measurements": latest_reading if latest_reading else None,
+#         }
+#         result.append(sensor_data)
+
+#     return result
+
+
 def read_sensor_by_section(section: str, db: Session):
-    for sensor in db.query(models.Sensor).filter(models.Sensor.section == section):
+    result = []
+    for sensor in (
+        db.query(models.Sensor).filter(models.Sensor.section == section).all()
+    ):
         latest_reading = (
             db.query(models.Measurement)
             .filter(models.Measurement.sensor_id == sensor.id)
@@ -49,17 +75,17 @@ def read_sensor_by_section(section: str, db: Session):
             .first()
         )
 
-        result = []
-
         sensor_data = {
             "name": sensor.name,
             "section": sensor.section,
             "status": sensor.status,
-            "measurements": latest_reading if latest_reading else None,
+            "measurements": {"temperature": None, "timestamp": None, "sensor_id": None}
+            if not latest_reading
+            else latest_reading.to_dict(),
         }
         result.append(sensor_data)
 
-        return result
+    return result
 
 
 def read_sensor_by_status(status: str, db: Session):

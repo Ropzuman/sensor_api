@@ -27,3 +27,11 @@ class Measurement(Base):
     sensor_id = Column(Integer, ForeignKey("sensors.id"))
 
     sensor = relationship("Sensor", back_populates="measurements")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "timestamp": self.timestamp,
+            "temperature": self.temperature,
+            "sensor_id": self.sensor_id,
+        }

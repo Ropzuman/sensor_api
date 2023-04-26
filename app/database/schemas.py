@@ -16,7 +16,7 @@ class SensorBase(BaseModel):
 
 
 class SensorData(BaseModel):
-    temperature: int
+    temperature: float
     timestamp: datetime.datetime
     sensor_id: int
 
