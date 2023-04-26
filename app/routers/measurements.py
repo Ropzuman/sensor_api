@@ -1,6 +1,6 @@
 import datetime
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from ..database import measurements_crud as crud
@@ -21,6 +21,11 @@ router = APIRouter(prefix="/Measurements")
 @router.get("/", response_model=list[DataDB])
 def get_measurements(db: Session = Depends(get_db)):
     return crud.get_all_measurements(db)
+
+
+@router.get("/{id}/sensor", response_model=SensorData)
+def get_latest_measurement_by_sensor_id(id: int, db: Session = Depends(get_db)):
+    return crud.get_latest_temperature(id, db)
 
 
 @router.post("/{id}/measurements", response_model=DataDB)

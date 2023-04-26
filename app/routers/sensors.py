@@ -37,12 +37,12 @@ def read_sensors(name: str = "", db: Session = Depends(get_db)):
     return get_all_sensors(db)
 
 
-@router.get("/section/{section}/{timestamp}", response_model=list[SectionDB])
+@router.get("/section/{section}", response_model=list[SectionDB])
 def read_sensors_by_section(section: str, db: Session = Depends(get_db)):
     return read_sensor_by_section(section, db)
 
 
-@router.get("/status/{status}", response_model=list[StatusDB])
+@router.get("/status/{status}", response_model=list[SensorBase])
 def read_sensors_by_status(status: str, db: Session = Depends(get_db)):
     return read_sensor_by_status(status, db)
 

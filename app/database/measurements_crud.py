@@ -1,13 +1,15 @@
 import datetime
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Query
 from fastapi.encoders import jsonable_encoder
+from sqlalchemy import desc, func
 from sqlalchemy.orm import Session
 
 from . import models
 from .schemas import (
     DataDB,
     DataIn,
+    SectionDB,
     SensorBase,
     SensorData,
     SensorDataDB,
@@ -44,3 +46,13 @@ def read_sensor_by_name(db: Session, name: str):
     if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
     return sensor
+
+
+def get_latest_temperature(sensor_id, db: Session) -> SectionDB:
+    rels = (
+        db.query(models.Measurement)
+        .filter(models.Measurement.sensor_id == sensor_id)
+        .order_by(desc(models.Measurement.timestamp))
+        .first()
+    )
+    return rels
