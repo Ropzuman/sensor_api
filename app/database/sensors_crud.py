@@ -41,13 +41,6 @@ def read_sensor_by_name(name: str, db: Session):
 
 
 def read_sensor_by_section(section: str, db: Session):
-    sensor = db.query(models.Sensor).filter(models.Sensor.section == section).all()
-
-    if not sensor:
-        raise HTTPException(status_code=404, detail="Sensor not found")
-    if not section:
-        raise HTTPException(status_code=400, detail="Section name required")
-
     for sensor in db.query(models.Sensor).filter(models.Sensor.section == section):
         latest_reading = (
             db.query(models.Measurement)
