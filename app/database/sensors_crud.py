@@ -22,9 +22,30 @@ def read_sensor_by_name(db: Session, name: str):
 def read_sensor_by_section(section: str, db: Session):
     sensor = db.query(models.Sensor).filter(models.Sensor.section == section).all()
 
-    if sensor is None:
+    if not sensor:
         raise HTTPException(status_code=404, detail="Sensor not found")
-    return sensor
+    if not section:
+        raise HTTPException(status_code=400, detail="Section name required")
+
+    for sensor in db.query(models.Sensor).filter(models.Sensor.section == section):
+        latest_reading = (
+            db.query(models.Measurement)
+            .filter(models.Measurement.sensor_id == sensor.id)
+            .order_by(models.Measurement.timestamp.desc())
+            .first()
+        )
+
+        result = []
+
+        sensor_data = {
+            "name": sensor.name,
+            "section": sensor.section,
+            "status": sensor.status,
+            "measurements": latest_reading if latest_reading else None,
+        }
+        result.append(sensor_data)
+
+        return result
 
 
 def read_sensor_by_status(status: str, db: Session):
