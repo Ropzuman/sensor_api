@@ -39,7 +39,7 @@ def read_sensors_by_status(status: str, db: Session = Depends(get_db)):
     return read_sensor_by_status(status, db)
 
 
-@router.get("/{name}", response_model=SensorDB)
+@router.get("/{name}", response_model=list[SensorDB])
 def read_sensors_by_name(name: str, db: Session = Depends(get_db)):
     return read_sensor_by_name(name, db)
 

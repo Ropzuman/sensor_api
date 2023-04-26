@@ -13,9 +13,31 @@ def get_all_sensors(db: Session):
 
 def read_sensor_by_name(name: str, db: Session):
     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
-    if sensor is None:
+    if not sensor:
         raise HTTPException(status_code=404, detail="Sensor not found")
-    return sensor
+    if name is None:
+        raise HTTPException(status_code=400, detail="Sensor name required")
+
+    for sensor in db.query(models.Sensor).filter(models.Sensor.name == name):
+        readings = (
+            db.query(models.Measurement)
+            .filter(models.Measurement.sensor_id == sensor.id)
+            .order_by(models.Measurement.timestamp.desc())
+            .limit(10)
+            .first()
+        )
+
+        result = []
+
+        sensor_data = {
+            "name": sensor.name,
+            "section": sensor.section,
+            "status": sensor.status,
+            "measurements": readings if readings else None,
+        }
+        result.append(sensor_data)
+
+        return result
 
 
 def read_sensor_by_section(section: str, db: Session):

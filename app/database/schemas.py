@@ -87,7 +87,7 @@ class DataDB(SensorData):
 
 
 class SensorDB(SensorBase):
-    pass
+    measurements: SensorData
 
     class Config:
         orm_mode = True
