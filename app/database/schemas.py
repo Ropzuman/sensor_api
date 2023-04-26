@@ -42,7 +42,7 @@ class SensorPatchDB(BaseModel):
 
 class SectionDB(SensorBase):
     section: str
-    measurements: list[SensorData] = []
+    measurements: SensorData
 
     class Config:
         orm_mode = True
