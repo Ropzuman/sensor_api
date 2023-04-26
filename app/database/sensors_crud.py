@@ -3,18 +3,8 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import func
 from sqlalchemy.orm import Session, relationship
 
-from . import measurements_crud, models, schemas
-from .schemas import (
-    SectionDB,
-    SensorBase,
-    SensorData,
-    SensorDataDB,
-    SensorDB,
-    SensorPatchDB,
-    StatusData,
-    StatusDB,
-    StatusPatchDB,
-)
+from . import models
+from .schemas import SensorBase, SensorPatchDB, StatusPatchDB
 
 
 def get_all_sensors(db: Session):
