@@ -16,7 +16,7 @@ class SensorBase(BaseModel):
 
 
 class SensorData(BaseModel):
-    temperature: int
+    temperature: float
     timestamp: datetime.datetime
     sensor_id: int
 
@@ -47,8 +47,15 @@ class SectionDB(SensorBase):
         orm_mode = True
 
 
+class SectionPatchDB(BaseModel):
+    section: str
+
+    class Config:
+        orm_mode = True
+
+
 class StatusPatchDB(StatusData):
-    status_list: list[StatusData] = []
+    pass
 
     class Config:
         orm_mode = True
@@ -87,7 +94,7 @@ class DataDB(SensorData):
 
 
 class SensorDB(SensorBase):
-    pass
+    measurements: List[SensorData] = []
 
     class Config:
         orm_mode = True
