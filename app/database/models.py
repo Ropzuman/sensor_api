@@ -13,9 +13,20 @@ class Sensor(Base):
     name = Column(String)
     section = Column(String)
     status = Column(String)
+    status_timestamp = Column(String, default=datetime.utcnow)
     measurement_timestamp = Column(String, default=datetime.utcnow)
 
     measurements = relationship("Measurement", back_populates="sensor")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "section": self.section,
+            "status": self.status,
+            "status_timestamp": self.status_timestamp,
+            "measurement_timestamp": self.measurement_timestamp,
+        }
 
 
 class Measurement(Base):

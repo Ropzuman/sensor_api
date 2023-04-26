@@ -73,6 +73,25 @@ def read_sensor_by_status(status: str, db: Session):
     return sensor
 
 
+def read_sensor_status_changes(name: str, db: Session):
+    # Get the sensor with the given name
+    sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
+
+    # If the sensor doesn't exist, return an empty list
+    if not sensor:
+        raise HTTPException(status_code=404, detail="Sensor not found")
+
+    # Get all the status changes for the sensor
+    status_changes = (
+        db.query(models.Sensor)
+        .filter(models.Sensor.id == sensor.id)
+        .order_by(models.Sensor.status_timestamp.desc())
+        .all()
+    )
+
+    return status_changes
+
+
 def create_sensor(sensor_in: SensorBase, db: Session):
     sensor = models.Sensor(**sensor_in.dict())
     existing_sensor = (
