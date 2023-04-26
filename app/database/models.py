@@ -23,7 +23,7 @@ class Measurement(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     temperature = Column(Float(precision=2))
-    timestamp = Column(String, default=datetime.utcnow)
+    timestamp = Column(String, default=datetime.utcnow())
     sensor_id = Column(Integer, ForeignKey("sensors.id"))
 
     sensor = relationship("Sensor", back_populates="measurements")

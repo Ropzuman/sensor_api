@@ -41,7 +41,6 @@ class SensorPatchDB(BaseModel):
 
 
 class SectionDB(SensorBase):
-    section: str
     measurements: SensorData
 
     class Config:
