@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -28,8 +26,6 @@ router = APIRouter(prefix="/Sensors")
 
 @router.get("", response_model=list[AllSensors])
 def read_sensors(name: str = "", db: Session = Depends(get_db)):
-    if name != "":
-        return read_sensor_by_name(db, name)
     return get_all_sensors(db)
 
 
@@ -41,6 +37,11 @@ def read_sensors_by_section(section: str, db: Session = Depends(get_db)):
 @router.get("/status/{status}", response_model=list[SensorBase])
 def read_sensors_by_status(status: str, db: Session = Depends(get_db)):
     return read_sensor_by_status(status, db)
+
+
+@router.get("/{name}", response_model=SensorDB)
+def read_sensors_by_name(name: str, db: Session = Depends(get_db)):
+    return read_sensor_by_name(name, db)
 
 
 @router.post("", response_model=SensorDB)

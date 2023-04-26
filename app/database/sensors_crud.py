@@ -11,9 +11,8 @@ def get_all_sensors(db: Session):
     return db.query(models.Sensor).all()
 
 
-def read_sensor_by_name(db: Session, name: str):
+def read_sensor_by_name(name: str, db: Session):
     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
-
     if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
     return sensor
