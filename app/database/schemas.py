@@ -47,8 +47,15 @@ class SectionDB(SensorBase):
         orm_mode = True
 
 
+class SectionPatchDB(BaseModel):
+    section: str
+
+    class Config:
+        orm_mode = True
+
+
 class StatusPatchDB(StatusData):
-    status_list: list[StatusData] = []
+    pass
 
     class Config:
         orm_mode = True

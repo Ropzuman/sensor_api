@@ -4,7 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session, relationship
 
 from . import models
-from .schemas import SensorBase, SensorPatchDB, StatusPatchDB
+from .schemas import SectionPatchDB, SensorBase, SensorPatchDB, StatusPatchDB
 
 
 def get_all_sensors(db: Session):
@@ -38,29 +38,6 @@ def read_sensor_by_name(name: str, db: Session):
         result.append(sensor_data)
 
         return result
-
-
-# def read_sensor_by_section(section: str, db: Session):
-#     result = []
-#     for sensor in (
-#         db.query(models.Sensor).filter(models.Sensor.section == section).all()
-#     ):
-#         latest_reading = (
-#             db.query(models.Measurement)
-#             .filter(models.Measurement.sensor_id == sensor.id)
-#             .order_by(models.Measurement.timestamp.desc())
-#             .first()
-#         )
-
-#         sensor_data = {
-#             "name": sensor.name,
-#             "section": sensor.section,
-#             "status": sensor.status,
-#             "measurements": latest_reading if latest_reading else None,
-#         }
-#         result.append(sensor_data)
-
-#     return result
 
 
 def read_sensor_by_section(section: str, db: Session):
@@ -113,7 +90,7 @@ def create_sensor(sensor_in: SensorBase, db: Session):
     return sensor
 
 
-def update_sensor(name: str, sensorbase: SensorPatchDB, db: Session):
+def update_sensor(name: str, sensorbase: SectionPatchDB, db: Session):
     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
     if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
