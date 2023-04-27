@@ -82,26 +82,42 @@ def read_sensor_by_status(status: str, db: Session):
     return sensor
 
 
-def read_sensor_status_changes(name: str, db: Session):
-    sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
-    if not sensor:
-        raise HTTPException(status_code=404, detail="Sensor not found")
+# def read_sensor_status_changes(name: str, db: Session):
+#     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
+#     if not sensor:
+#         raise HTTPException(status_code=404, detail="Sensor not found")
 
-    status_changes = (
-        db.query(models.StatusChange)
-        .filter(models.StatusChange.sensor_name == sensor.name)
-        .order_by(models.StatusChange.status_timestamp.desc())
-        .all()
-    )
+#     status_changes = (
+#         db.query(models.StatusChange)
+#         .filter(models.StatusChange.sensor_name == sensor.name)
+#         .order_by(models.StatusChange.status_timestamp.desc())
+#         .all()
+#     )
 
-    sensor_data = {
-        "name": sensor.name,
-        "section": sensor.section,
-        "status": sensor.status,
-        "changes": status_changes,
-    }
+#     sensor_data = {
+#         "name": sensor.name,
+#         "section": sensor.section,
+#         "status": sensor.status,
+#         "changes": status_changes,
+#     }
 
-    return sensor_data
+#     return sensor_data
+
+
+def read_sensor_history(name: str, db: Session):
+    sensor_id = db.query(models.Sensor.id).filter(models.Sensor.name == name).first()
+    sensor_history = []
+
+    for i in sensor_history:
+        sensor_history.append(
+            db.query(models.Measurement)
+            .filter(models.Measurement.sensor_id == sensor_id)
+            .order_by(models.Measurement.timestamp.desc())
+            .limit(10)
+            .all()
+        )
+
+    return sensor_history
 
 
 def create_sensor(sensor_in: SensorBase, db: Session):
@@ -134,28 +150,19 @@ def update_sensor(name: str, sensorbase: SectionPatchDB, db: Session):
     return sensor
 
 
-# def update_status(name: str, status: StatusPatchDB, db: Session):
-#     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
-#     if sensor is None:
-#         raise HTTPException(status_code=404, detail="Sensor not found")
-#     sensor_data = jsonable_encoder(status)
-#     for field in sensor_data:
-#         setattr(sensor, field, sensor_data[field])
-#     db.add(sensor, sensor_data)
-#     db.commit()
-#     db.refresh(sensor, sensor_data)
-#     return sensor, sensor_data
+status_history = []
 
 
 def update_status(name: str, status: StatusPatchDB, db: Session):
+    global status_history
     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
-    if not sensor:
+    if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
-    new_status = models.StatusChange(
-        status=status.status, status_timestamp=datetime.now()
-    )
-    sensor.status = new_status.status
-    db.add(sensor)
+    sensor_data = jsonable_encoder(status)
+    for field in sensor_data:
+        setattr(sensor, field, sensor_data[field])
+    status_history.append((sensor_data))
+    db.add(sensor, sensor_data)
     db.commit()
-    db.refresh(sensor)
-    return sensor
+    db.refresh(sensor, sensor_data)
+    return sensor, sensor_data

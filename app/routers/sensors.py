@@ -21,7 +21,7 @@ from ..database.sensors_crud import (
     read_sensor_by_name,
     read_sensor_by_section,
     read_sensor_by_status,
-    read_sensor_status_changes,
+    read_sensor_history,
     update_sensor,
     update_status,
 )
@@ -51,7 +51,7 @@ def read_sensors_by_name(name: str, db: Session = Depends(get_db)):
 
 @router.get("/{status}", response_model=list[StatusChanges])
 def get_sensor_status_changes(name: str, db: Session = Depends(get_db)):
-    return read_sensor_status_changes(name, db)
+    return read_sensor_history(name, db)
 
 
 @router.post("", response_model=SensorDB)

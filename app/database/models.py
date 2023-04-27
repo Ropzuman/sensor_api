@@ -17,7 +17,6 @@ class Sensor(Base):
     measurement_timestamp = Column(String, default=datetime.utcnow)
 
     measurements = relationship("Measurement", back_populates="sensor")
-    status_changes = relationship("StatusChange", back_populates="sensor")
 
     def to_dict(self):
         return {
@@ -46,23 +45,4 @@ class Measurement(Base):
             "timestamp": self.timestamp,
             "temperature": self.temperature,
             "sensor_id": self.sensor_id,
-        }
-
-
-class StatusChange(Base):
-    __tablename__ = "status_changes"
-
-    id = Column(Integer, primary_key=True, index=True)
-    sensor_name = Column(Integer, ForeignKey("sensors.name"))
-    status = Column(String, default="unknown")
-    status_timestamp = Column(String, default=datetime.utcnow)
-
-    sensor = relationship("Sensor", back_populates="status_changes")
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "sensor_id": self.sensor_id,
-            "status": self.status,
-            "status_timestamp": self.status_timestamp,
         }
