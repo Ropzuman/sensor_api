@@ -94,6 +94,13 @@ class SensorDB(SensorBase):
         orm_mode = True
 
 
+class StatusChanges(SensorBase):
+    statuses: List[StatusData] = []
+
+    class Config:
+        orm_mode = True
+
+
 class AllSensors(SensorBase):
     pass
 
