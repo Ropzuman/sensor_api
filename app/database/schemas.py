@@ -54,7 +54,9 @@ class SectionPatchDB(BaseModel):
         orm_mode = True
 
 
-class StatusPatchDB(StatusData):
+class StatusPatchDB(BaseModel):
+    status: str
+
     class Config:
         orm_mode = True
 
