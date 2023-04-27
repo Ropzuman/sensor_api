@@ -55,17 +55,11 @@ class SectionPatchDB(BaseModel):
 
 
 class StatusPatchDB(StatusData):
-    pass
-
     class Config:
         orm_mode = True
 
 
 class StatusDB(StatusData):
-    name: str
-    status: str
-    status_timestamp: datetime.datetime
-
     class Config:
         orm_mode = True
 
