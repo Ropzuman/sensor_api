@@ -1,6 +1,3 @@
-from datetime import datetime
-from typing import List
-
 from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import func
@@ -22,7 +19,6 @@ def get_all_sensors(db: Session):
 
 
 def read_sensor_by_name(name: str, db: Session):
-    result = []
     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
     if not sensor:
         raise HTTPException(status_code=404, detail="Sensor not found")
@@ -38,6 +34,8 @@ def read_sensor_by_name(name: str, db: Session):
             .all()
         )
 
+        result = []
+
         sensor_data = {
             "name": sensor.name,
             "section": sensor.section,
@@ -46,7 +44,7 @@ def read_sensor_by_name(name: str, db: Session):
         }
         result.append(sensor_data)
 
-    return result
+        return result
 
 
 def read_sensor_by_section(section: str, db: Session):
@@ -82,20 +80,33 @@ def read_sensor_by_status(status: str, db: Session):
     return sensor
 
 
-def read_sensor_history(name: str, db: Session):
-    sensor_id = db.query(models.Sensor.id).filter(models.Sensor.name == name).first()
-    sensor_history = []
+def read_sensor_status_changes(name: str, db: Session):
+    sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
+    if not sensor:
+        raise HTTPException(status_code=404, detail="Sensor not found")
+    if name is None:
+        raise HTTPException(status_code=400, detail="Sensor name required")
 
-    for i in sensor_history:
-        sensor_history.append(
-            db.query(models.Measurement)
-            .filter(models.Measurement.sensor_id == sensor_id)
-            .order_by(models.Measurement.timestamp.desc())
+    for sensor in db.query(models.Sensor).filter(models.Sensor.name == name):
+        data = (
+            db.query(models.Sensor)
+            .filter(models.Sensor.id == sensor.id)
+            .order_by(models.Sensor.timestamp.desc())
             .limit(10)
             .all()
         )
 
-    return sensor_history
+        result = []
+
+        sensor_data = {
+            "name": sensor.name,
+            "section": sensor.section,
+            "status": sensor.status,
+            "changes": data if data else None,
+        }
+        result.append(sensor_data)
+
+        return result
 
 
 def create_sensor(sensor_in: SensorBase, db: Session):
@@ -128,14 +139,27 @@ def update_sensor(name: str, sensorbase: SectionPatchDB, db: Session):
     return sensor
 
 
-def update_status(name: str, statusdb: StatusPatchDB, db: Session):
+# def update_status(name: str, status: StatusPatchDB, db: Session):
+#     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
+#     if sensor is None:
+#         raise HTTPException(status_code=404, detail="Sensor not found")
+#     sensor_data = jsonable_encoder(status)
+#     for field in sensor_data:
+#         setattr(sensor, field, sensor_data[field])
+#     db.add(sensor)
+#     db.commit()
+#     db.refresh(sensor)
+#     return sensor
+
+
+def update_status(name: str, status: StatusPatchDB, db: Session):
     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
     if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
-    sensor_data = jsonable_encoder(statusdb)
+    sensor_data = jsonable_encoder(status)
     for field in sensor_data:
         setattr(sensor, field, sensor_data[field])
-    db.add(sensor)
+    db.add(sensor, sensor_data)
     db.commit()
-    db.refresh(sensor)
-    return sensor
+    db.refresh(sensor, sensor_data)
+    return sensor, sensor_data

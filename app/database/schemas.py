@@ -54,9 +54,7 @@ class SectionPatchDB(BaseModel):
         orm_mode = True
 
 
-class StatusPatchDB(BaseModel):
-    status: str
-
+class StatusPatchDB(StatusData):
     class Config:
         orm_mode = True
 
@@ -91,13 +89,6 @@ class DataDB(SensorData):
 
 class SensorDB(SensorBase):
     measurements: List[SensorData] = []
-
-    class Config:
-        orm_mode = True
-
-
-class StatusChanges(SensorBase):
-    statuses: List[StatusData] = []
 
     class Config:
         orm_mode = True

@@ -10,7 +10,6 @@ from ..database.schemas import (
     SensorBase,
     SensorDB,
     SensorPatchDB,
-    StatusChanges,
     StatusData,
     StatusDB,
     StatusPatchDB,
@@ -21,7 +20,7 @@ from ..database.sensors_crud import (
     read_sensor_by_name,
     read_sensor_by_section,
     read_sensor_by_status,
-    read_sensor_history,
+    read_sensor_status_changes,
     update_sensor,
     update_status,
 )
@@ -49,9 +48,9 @@ def read_sensors_by_name(name: str, db: Session = Depends(get_db)):
     return read_sensor_by_name(name, db)
 
 
-@router.get("/{status}", response_model=list[StatusChanges])
+@router.get("/sensor/{status}", response_model=list[StatusData])
 def get_sensor_status_changes(name: str, db: Session = Depends(get_db)):
-    return read_sensor_history(name, db)
+    return read_sensor_status_changes(name, db)
 
 
 @router.post("", response_model=SensorDB)
