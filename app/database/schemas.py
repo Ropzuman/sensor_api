@@ -4,7 +4,9 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
-class SensorBase(BaseModel):
+class SensorBase(
+    BaseModel
+):  # A base model for sensor data, which includes name, section, and status fields. It also has a nested Config class with orm_mode = True attribute, which is used to enable ORM mode for this model as does most of the other models in this file.
     name: str
     section: str
     status: str
@@ -13,7 +15,9 @@ class SensorBase(BaseModel):
         orm_mode = True
 
 
-class SensorData(BaseModel):
+class SensorData(
+    BaseModel
+):  # model that includes temperature, timestamp, and sensor_id fields for sensor measurements.
     temperature: float
     timestamp: datetime.datetime
     sensor_id: int
@@ -22,7 +26,9 @@ class SensorData(BaseModel):
         orm_mode = True
 
 
-class StatusData(BaseModel):
+class StatusData(
+    BaseModel
+):  # model that includes status and status_timestamp fields for sensor status data.
     status: str
     status_timestamp: datetime.datetime
 
@@ -30,7 +36,9 @@ class StatusData(BaseModel):
         orm_mode = True
 
 
-class SensorPatchDB(BaseModel):
+class SensorPatchDB(
+    BaseModel
+):  # model that includes name and section fields for updating sensor data.
     name: str
     section: str
 
@@ -38,31 +46,41 @@ class SensorPatchDB(BaseModel):
         orm_mode = True
 
 
-class SectionDB(SensorBase):
-    measurements: SensorData
-
-    class Config:
-        orm_mode = True
-
-
-class SectionPatchDB(BaseModel):
+class SectionPatchDB(
+    BaseModel
+):  # model that includes section field for updating section data.
     section: str
 
     class Config:
         orm_mode = True
 
 
-class StatusPatchDB(StatusData):
+class StatusPatchDB(
+    StatusData
+):  # model that extends StatusData and is used for updating sensor status.
     class Config:
         orm_mode = True
 
 
-class StatusDB(StatusData):
+class SectionDB(
+    SensorBase
+):  # model that extends SensorBase and includes a list of measurements for a specific section.
+    measurements: SensorData
+
     class Config:
         orm_mode = True
 
 
-class SensorDataDB(BaseModel):
+class StatusDB(
+    StatusData
+):  # model that extends StatusData and is used to store sensor status data in the database.
+    class Config:
+        orm_mode = True
+
+
+class SensorDataDB(
+    BaseModel
+):  # model that includes temperature and timestamp fields for sensor measurements, to be stored in the database.
     temperature: int
     timestamp: datetime.datetime
 
@@ -70,14 +88,16 @@ class SensorDataDB(BaseModel):
         orm_mode = True
 
 
-class DataIn(BaseModel):
+class DataIn(BaseModel):  # A model that includes an id field to specify sensor ID.
     id: int
 
     class Config:
         orm_mode = True
 
 
-class DataDB(SensorData):
+class DataDB(
+    SensorData
+):  # model that extends SensorData and includes an additional id field to store sensor measurement data in the database. It also has an optional sensor field to reference the DataIn model
     id: int
     sensor: Optional[DataIn] = None
 
@@ -88,14 +108,18 @@ class DataDB(SensorData):
         allow_none = True
 
 
-class SensorDB(SensorBase):
+class SensorDB(
+    SensorBase
+):  # model that extends SensorBase and includes a list of measurements for a specific sensor.
     measurements: List[SensorData] = []
 
     class Config:
         orm_mode = True
 
 
-class MeasurementDelete(BaseModel):
+class MeasurementDelete(
+    BaseModel
+):  # model that includes id, sensor_id, temperature, and timestamp fields for deleting a specific sensor measurement.
     id: int
     sensor_id: int
     temperature: float
@@ -105,7 +129,9 @@ class MeasurementDelete(BaseModel):
         orm_mode = True
 
 
-class AllSensors(SensorBase):
+class AllSensors(
+    SensorBase
+):  # model that extends SensorBase and is used to retrieve all sensor data.
     pass
 
     class Config:
