@@ -1,111 +1,47 @@
-# Sensor API Specification
+# Sensor API Specifications
+
+The Sensor API is a RESTful API for managing sensor data. This document outlines the specifications for the API.
 
 ## Endpoints
 
-- GET /sensors - All the sensors with:
+The API has the following endpoints:
 
-  - id
-  - section
-  - status
+- `/sensors` (GET): Get a list of all sensors.
+- `/sensors/<id>` (GET): Get data from a specific sensor.
+- `/sensors` (POST): Add data from a new sensor.
+- `/sensors/<id>` (PUT): Update data from a specific sensor.
+- `/sensors/<id>` (DELETE): Delete data from a specific sensor.
 
-- GET /sensor/:section - All the sensors in a section with:
+## Request and Response Formats
 
-  - id
-  - status
-  - temperature with time and date
+The API accepts and returns JSON-encoded request bodies and response bodies.
+Example request:
 
-- GET /sensors/:id - A specific sensor with:
+``` bash
+GET /sensors HTTP/1.1
+Host: localhost:5000
+```
 
-  - id
-  - section
-  - status
-  - temperature with timestamp
-  - 10 latest values of the sensor
-  - Possibility to get values between two timestamps
+Example response:
 
-- GET /sensors/:id/temperature - All the measurements of a sensor with:
+``` bash
+HTTP/1.1 200 OK
+Content-Type: application/json
 
-  - timestamp
+[
+  {
+    "id": 1,
+    "name": "Sensor 1",
+    "block": "Room 1",
+    "status": "active",
 
-- GET /sensors/:error - All the sensor errors with:
-
-  - graph showing error timestamps
-
-- POST /sensors/:id - Add a new sensor with:
-
-  - id
-  - section
-  - status
-
-- POST /sensors/:id/status - Change the status of a sensor with:
-
-  - status
-
-- POST /sensors/:id/sec - Change the section of a sensor with:
-
-  - section
-
-- DELETE /sensors/:id - Delete a sensor with:
-
-  - id
-
-- DELETE /sensors/:id/temperature - Delete a specific sensor measurement with:
-  - timestamp
-
-## Schema
-
-### SensorBase (Inherits from BaseModel)
-
-Used to create a new sensor.
-
-- section: string
-- status: string
-
-### SensorDB (Inherits from SensorBase)
-
-- id: int
-- temperature: (list[SensorData])
-
-### AllSensors (Inherits from BaseModel)
-
-- id: int
-- section: string
-- status: string
-- temperature: (list[SensorData])
-
-### SensorData (Inherits from BaseModel)
-
-- timestamp: datetime
-- temperature: int (As someone working as a process operator, ambient temperatures are almost never needed to be measured beyond full degrees celsius)
-
-### SensorDB (Inherits from SensorBase)
-
-- id: int
-- temperature: (list[SensorData])
-- error: (list[SensorError])
-- timestamp: datetime
-
-### SensorError (Inherits from BaseModel)
-
-- timestamp: datetime
-- error: string
-
-### ErrorDB (Inherits form SensorError)
-
-- id: int
-
-## Routers
-
-- Sensors
-- Measurements
-
-## Databases
-
-- Sensors crud
-- Measurements crud
-- Errors crud
-
-## Models
-
-- Class Sensor
-- Class Measurement
+  },
+  {
+    "id": 2,
+    "name": "Sensor 2",
+    "location": "Room 2",
+    "status": "active",
+  },
+  ...
+]
+```
