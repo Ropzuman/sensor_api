@@ -1,0 +1,9 @@
+#Requirements for the project
+#Click the "Create Environment" button to create a new environment. Choose venv as the environment type
+
+fastapi==0.95.0
+uvicorn==0.21.1
+pydantic==1.10.7
+pylance==0.4.1
+sqlalchemy==2.0.9
+autopep==2.0.2
