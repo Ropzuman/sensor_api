@@ -31,7 +31,7 @@ To run this project, you will need:
 
 2. Create a virtual environment and activate it.
 
-Here the best course of action is to navigate to the requirements.txt file and run the following command:
+    Here the best course of action is to navigate to the requirements.txt file and run the following command:
 
     ``` bash
     pip install -r requirements.txt
