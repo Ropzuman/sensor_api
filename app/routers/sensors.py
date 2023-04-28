@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from ..database.database import engine, get_db
 from ..database.schemas import (
     AllSensors,
-    SectionDB,
-    SectionPatchDB,
+    BlockDB,
+    BlockPatchDB,
     SensorBase,
     SensorDB,
     StatusPatchDB,
@@ -13,8 +13,8 @@ from ..database.schemas import (
 from ..database.sensors_crud import (
     create_sensor,
     get_all_sensors,
+    read_sensor_by_block,
     read_sensor_by_name,
-    read_sensor_by_section,
     read_sensor_by_status,
     update_sensor,
     update_status,
@@ -35,10 +35,10 @@ def read_sensors(name: str = "", db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Database connection error")
 
 
-# Read Section
-@router.get("/{section}", response_model=list[SectionDB])
-def read_sensors_by_section(section: str, db: Session = Depends(get_db)):
-    return read_sensor_by_section(section, db)
+# Read block
+@router.get("/{block}", response_model=list[BlockDB])
+def read_sensors_by_block(block: str, db: Session = Depends(get_db)):
+    return read_sensor_by_block(block, db)
 
 
 # Read Status
@@ -69,10 +69,8 @@ def create_sensors(sensor_in: SensorBase, db: Session = Depends(get_db)):
 
 
 # Update Sensor
-@router.patch("/{section}")
-def update_sensors(
-    name: str, sensorbase: SectionPatchDB, db: Session = Depends(get_db)
-):
+@router.patch("/{block}")
+def update_sensors(name: str, sensorbase: BlockPatchDB, db: Session = Depends(get_db)):
     # Wrap the database function call in a try block to catch any exceptions
     try:
         return update_sensor(name, sensorbase, db)

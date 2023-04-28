@@ -4,7 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session, relationship
 
 from . import models
-from .schemas import SectionPatchDB, SensorBase, StatusPatchDB
+from .schemas import BlockPatchDB, SensorBase, StatusPatchDB
 
 
 # retrieves all sensors from the database using a database session object db and returns them as a list.
@@ -32,7 +32,7 @@ def read_sensor_by_name(name: str, db: Session):
 
     sensor_data = {  # sensor data
         "name": sensor.name,
-        "section": sensor.section,
+        "block": sensor.block,
         "status": sensor.status,
         "measurements": readings if readings else None,
     }
@@ -41,12 +41,10 @@ def read_sensor_by_name(name: str, db: Session):
     return result
 
 
-# retrieves all sensors in a given section from the database using a database session object db and returns their data along with the latest measurement for each sensor. If no measurements are found for a given sensor, the returned value will be None.
-def read_sensor_by_section(section: str, db: Session):
+# retrieves all sensors in a given block from the database using a database session object db and returns their data along with the latest measurement for each sensor. If no measurements are found for a given sensor, the returned value will be None.
+def read_sensor_by_block(block: str, db: Session):
     result = []
-    for sensor in (
-        db.query(models.Sensor).filter(models.Sensor.section == section).all()
-    ):
+    for sensor in db.query(models.Sensor).filter(models.Sensor.block == block).all():
         latest_reading = (
             db.query(models.Measurement)
             .filter(models.Measurement.sensor_id == sensor.id)
@@ -56,7 +54,7 @@ def read_sensor_by_section(section: str, db: Session):
 
         sensor_data = {
             "name": sensor.name,
-            "section": sensor.section,
+            "block": sensor.block,
             "status": sensor.status,
             "measurements": {"temperature": None, "timestamp": None, "sensor_id": None}
             if not latest_reading
@@ -95,8 +93,8 @@ def create_sensor(sensor_in: SensorBase, db: Session):
     return sensor
 
 
-# This function updates an existing sensor in the database with the provided data in a SectionPatchDB object sensorbase. It first checks if the sensor exists in the database, and if not, raises an HTTP exception. If the sensor is found, it updates the relevant fields with the new data and returns the updated sensor object.
-def update_sensor(name: str, sensorbase: SectionPatchDB, db: Session):
+# This function updates an existing sensor in the database with the provided data in a blockPatchDB object sensorbase. It first checks if the sensor exists in the database, and if not, raises an HTTP exception. If the sensor is found, it updates the relevant fields with the new data and returns the updated sensor object.
+def update_sensor(name: str, sensorbase: BlockPatchDB, db: Session):
     sensor = (
         db.query(models.Sensor).filter(models.Sensor.name == name).first()
     )  # check if sensor exists

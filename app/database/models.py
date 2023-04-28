@@ -11,7 +11,7 @@ class Sensor(Base):  # Sensor model
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
-    section = Column(String)
+    block = Column(String)
     status = Column(String, default="unknown")
     status_timestamp = Column(String, default=datetime.utcnow)
     measurement_timestamp = Column(String, default=datetime.utcnow)
@@ -24,7 +24,7 @@ class Sensor(Base):  # Sensor model
         return {
             "id": self.id,
             "name": self.name,
-            "section": self.section,
+            "block": self.block,
             "status": self.status,
             "status_timestamp": self.status_timestamp,
             "measurement_timestamp": self.measurement_timestamp,

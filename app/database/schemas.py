@@ -6,9 +6,9 @@ from pydantic import BaseModel
 
 class SensorBase(
     BaseModel
-):  # A base model for sensor data, which includes name, section, and status fields. It also has a nested Config class with orm_mode = True attribute, which is used to enable ORM mode for this model as does most of the other models in this file.
+):  # A base model for sensor data, which includes name, block, and status fields. It also has a nested Config class with orm_mode = True attribute, which is used to enable ORM mode for this model as does most of the other models in this file.
     name: str
-    section: str
+    block: str
     status: str
 
     class Config:
@@ -38,18 +38,18 @@ class StatusData(
 
 class SensorPatchDB(
     BaseModel
-):  # model that includes name and section fields for updating sensor data.
+):  # model that includes name and block fields for updating sensor data.
     name: str
-    section: str
+    block: str
 
     class Config:
         orm_mode = True
 
 
-class SectionPatchDB(
+class BlockPatchDB(
     BaseModel
-):  # model that includes section field for updating section data.
-    section: str
+):  # model that includes block field for updating block data.
+    block: str
 
     class Config:
         orm_mode = True
@@ -62,9 +62,9 @@ class StatusPatchDB(
         orm_mode = True
 
 
-class SectionDB(
+class BlockDB(
     SensorBase
-):  # model that extends SensorBase and includes a list of measurements for a specific section.
+):  # model that extends SensorBase and includes a list of measurements for a specific block.
     measurements: SensorData
 
     class Config:
