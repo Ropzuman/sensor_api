@@ -1,5 +1,5 @@
 import datetime
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -81,14 +81,27 @@ class DataIn(BaseModel):
 
 class DataDB(SensorData):
     id: int
-    sensor: DataIn
+    sensor: Optional[DataIn] = None
 
     class Config:
         fields = {"sensor_id": {"exclude": True}}
+        orm_mode = True
+        allow_population_by_field_name = True
+        allow_none = True
 
 
 class SensorDB(SensorBase):
     measurements: List[SensorData] = []
+
+    class Config:
+        orm_mode = True
+
+
+class MeasurementDelete(BaseModel):
+    id: int
+    sensor_id: int
+    temperature: float
+    timestamp: Optional[str] = None
 
     class Config:
         orm_mode = True
