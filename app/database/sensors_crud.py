@@ -45,18 +45,16 @@ def read_sensor_by_name(name: str, db: Session):
 def read_sensor_by_section(section: str, db: Session):
     result = []
     for sensor in (
-        db.query(models.Sensor)
-        .filter(models.Sensor.section == section)
-        .all()  # all sensors in a given section
+        db.query(models.Sensor).filter(models.Sensor.section == section).all()
     ):
-        latest_reading = (  # latest measurement for each sensor
+        latest_reading = (
             db.query(models.Measurement)
             .filter(models.Measurement.sensor_id == sensor.id)
             .order_by(models.Measurement.timestamp.desc())
             .first()
         )
 
-        sensor_data = {  # sensor data
+        sensor_data = {
             "name": sensor.name,
             "section": sensor.section,
             "status": sensor.status,
@@ -81,18 +79,16 @@ def read_sensor_by_status(status: str, db: Session):
 
 
 def create_sensor(sensor_in: SensorBase, db: Session):
+    sensor = models.Sensor(**sensor_in.dict())
     existing_sensor = (
-        db.query(models.Sensor)
-        .filter(models.Sensor.name == sensor_in.name)
-        .first()  # check if sensor already exists
+        db.query(models.Sensor).filter(models.Sensor.name == sensor.name).first()
     )
 
-    if existing_sensor is not None:  # if sensor already exists, raise an HTTP exception
+    if existing_sensor is not None:
         raise HTTPException(
             status_code=400, detail="Sensor with this name already exists"
         )
 
-    sensor = models.Sensor(**sensor_in.dict())  # create a new sensor
     db.add(sensor)
     db.commit()
     db.refresh(sensor)

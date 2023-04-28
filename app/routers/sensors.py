@@ -36,14 +36,9 @@ def read_sensors(name: str = "", db: Session = Depends(get_db)):
 
 
 # Read Section
-@router.get("/section/{section}", response_model=list[SectionDB])
+@router.get("/{section}", response_model=list[SectionDB])
 def read_sensors_by_section(section: str, db: Session = Depends(get_db)):
-    # Wrap the database function call in a try block to catch any exceptions
-    try:
-        return read_sensor_by_section(section, db)
-    except:
-        # If an exception is caught, raise an HTTPException with a 500 status code and a custom error message
-        raise HTTPException(status_code=500, detail="Database connection error")
+    return read_sensor_by_section(section, db)
 
 
 # Read Status
@@ -68,14 +63,9 @@ def read_sensors_by_name(name: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Database connection error")
 
 
-@router.post("", response_model=SensorDB)
+@router.post("", response_model=SensorDB)  # Create a new sensor
 def create_sensors(sensor_in: SensorBase, db: Session = Depends(get_db)):
-    # Wrap the database function call in a try block to catch any exceptions
-    try:
-        return create_sensor(sensor_in, db)
-    except:
-        # If an exception is caught, raise an HTTPException with a 500 status code and a custom error message
-        raise HTTPException(status_code=500, detail="Database connection error")
+    return create_sensor(sensor_in, db)
 
 
 # Update Sensor
