@@ -1,21 +1,10 @@
-import datetime
-import os
-
 from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import func
 from sqlalchemy.orm import Session, relationship
 
 from . import models
-from .schemas import (
-    SectionPatchDB,
-    SensorBase,
-    SensorData,
-    SensorPatchDB,
-    StatusData,
-    StatusDB,
-    StatusPatchDB,
-)
+from .schemas import SectionPatchDB, SensorBase, StatusPatchDB
 
 
 def get_all_sensors(db: Session):

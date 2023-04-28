@@ -3,8 +3,6 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from . import models
-
 
 class SensorBase(BaseModel):
     name: str

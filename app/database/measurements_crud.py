@@ -1,12 +1,10 @@
-import datetime
-
 from fastapi import HTTPException, Query
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import desc, func
 from sqlalchemy.orm import Session
 
 from . import models
-from .schemas import DataDB, MeasurementDelete, SectionDB, SensorDataDB
+from .schemas import SensorDataDB
 
 
 def get_all_measurements(db: Session):

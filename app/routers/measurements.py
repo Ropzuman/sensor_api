@@ -1,12 +1,9 @@
-import datetime
-
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from ..database import measurements_crud as crud
-from ..database import models
 from ..database.database import engine, get_db
-from ..database.schemas import DataDB, MeasurementDelete, SensorData, SensorDataDB
+from ..database.schemas import DataDB, MeasurementDelete, SensorDataDB
 
 router = APIRouter(prefix="/Measurements")
 

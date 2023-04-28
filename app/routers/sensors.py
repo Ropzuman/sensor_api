@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from ..database import models
 from ..database.database import engine, get_db
 from ..database.schemas import (
     AllSensors,
@@ -9,9 +8,6 @@ from ..database.schemas import (
     SectionPatchDB,
     SensorBase,
     SensorDB,
-    SensorPatchDB,
-    StatusData,
-    StatusDB,
     StatusPatchDB,
 )
 from ..database.sensors_crud import (
