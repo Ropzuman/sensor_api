@@ -1,3 +1,6 @@
+import datetime
+import os
+
 from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import func
@@ -10,6 +13,7 @@ from .schemas import (
     SensorData,
     SensorPatchDB,
     StatusData,
+    StatusDB,
     StatusPatchDB,
 )
 
@@ -80,35 +84,6 @@ def read_sensor_by_status(status: str, db: Session):
     return sensor
 
 
-def read_sensor_status_changes(name: str, db: Session):
-    sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
-    if not sensor:
-        raise HTTPException(status_code=404, detail="Sensor not found")
-    if name is None:
-        raise HTTPException(status_code=400, detail="Sensor name required")
-
-    for sensor in db.query(models.Sensor).filter(models.Sensor.name == name):
-        data = (
-            db.query(models.Sensor)
-            .filter(models.Sensor.id == sensor.id)
-            .order_by(models.Sensor.timestamp.desc())
-            .limit(10)
-            .all()
-        )
-
-        result = []
-
-        sensor_data = {
-            "name": sensor.name,
-            "section": sensor.section,
-            "status": sensor.status,
-            "changes": data if data else None,
-        }
-        result.append(sensor_data)
-
-        return result
-
-
 def create_sensor(sensor_in: SensorBase, db: Session):
     sensor = models.Sensor(**sensor_in.dict())
     existing_sensor = (
@@ -139,19 +114,6 @@ def update_sensor(name: str, sensorbase: SectionPatchDB, db: Session):
     return sensor
 
 
-# def update_status(name: str, status: StatusPatchDB, db: Session):
-#     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
-#     if sensor is None:
-#         raise HTTPException(status_code=404, detail="Sensor not found")
-#     sensor_data = jsonable_encoder(status)
-#     for field in sensor_data:
-#         setattr(sensor, field, sensor_data[field])
-#     db.add(sensor)
-#     db.commit()
-#     db.refresh(sensor)
-#     return sensor
-
-
 def update_status(name: str, status: StatusPatchDB, db: Session):
     sensor = db.query(models.Sensor).filter(models.Sensor.name == name).first()
     if sensor is None:
@@ -162,4 +124,5 @@ def update_status(name: str, status: StatusPatchDB, db: Session):
     db.add(sensor, sensor_data)
     db.commit()
     db.refresh(sensor, sensor_data)
+
     return sensor, sensor_data

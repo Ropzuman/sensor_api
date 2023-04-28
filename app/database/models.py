@@ -29,25 +29,6 @@ class Sensor(Base):
         }
 
 
-# class Measurement(Base):
-#     __tablename__ = "measurements"
-
-#     id = Column(Integer, primary_key=True, index=True)
-#     temperature = Column(Float(precision=2))
-#     timestamp = Column(String, default=datetime.utcnow())
-#     sensor_id = Column(Integer, ForeignKey("sensors.id"))
-
-#     sensor = relationship("Sensor", back_populates="measurements")
-
-#     def to_dict(self):
-#         return {
-#             "id": self.id,
-#             "timestamp": self.timestamp,
-#             "temperature": self.temperature,
-#             "sensor_id": self.sensor_id,
-#         }
-
-
 class Measurement(Base):
     __tablename__ = "measurements"
 
