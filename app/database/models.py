@@ -12,7 +12,7 @@ class Sensor(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     section = Column(String)
-    status = Column(String)
+    status = Column(String, default="unknown")
     status_timestamp = Column(String, default=datetime.utcnow)
     measurement_timestamp = Column(String, default=datetime.utcnow)
 
@@ -37,7 +37,7 @@ class Measurement(Base):
     timestamp = Column(String, default=datetime.utcnow())
     sensor_id = Column(Integer, ForeignKey("sensors.id"))
 
-    sensor = relationship("Sensor", back_populates="measurements")
+    sensor = relationship("Sensor", back_populates="measurements", lazy="select")
 
     def to_dict(self):
         return {

@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from ..database import models
 from ..database.database import engine, get_db
 from ..database.schemas import (
     AllSensors,
@@ -9,9 +8,6 @@ from ..database.schemas import (
     SectionPatchDB,
     SensorBase,
     SensorDB,
-    SensorPatchDB,
-    StatusData,
-    StatusDB,
     StatusPatchDB,
 )
 from ..database.sensors_crud import (
@@ -20,7 +16,6 @@ from ..database.sensors_crud import (
     read_sensor_by_name,
     read_sensor_by_section,
     read_sensor_by_status,
-    read_sensor_status_changes,
     update_sensor,
     update_status,
 )
@@ -46,11 +41,6 @@ def read_sensors_by_status(status: str, db: Session = Depends(get_db)):
 @router.get("/sensor/{name}", response_model=list[SensorDB])
 def read_sensors_by_name(name: str, db: Session = Depends(get_db)):
     return read_sensor_by_name(name, db)
-
-
-@router.get("/sensor/{status}", response_model=list[StatusData])
-def get_sensor_status_changes(name: str, db: Session = Depends(get_db)):
-    return read_sensor_status_changes(name, db)
 
 
 @router.post("", response_model=SensorDB)

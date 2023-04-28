@@ -1,12 +1,9 @@
-import datetime
-
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from ..database import measurements_crud as crud
-from ..database import models
 from ..database.database import engine, get_db
-from ..database.schemas import DataDB, SensorData, SensorDataDB
+from ..database.schemas import DataDB, MeasurementDelete, SensorDataDB
 
 router = APIRouter(prefix="/Measurements")
 
@@ -23,6 +20,6 @@ def add_measurement(
     return crud.create_measurement(id, temperature_in, db)
 
 
-@router.delete("/{id}", response_model=DataDB)
-def delete_measurements_by_id(id: datetime.datetime, db: Session = Depends(get_db)):
+@router.delete("/{id}", response_model=MeasurementDelete)
+def delete_measurements_by_id(id: int, db: Session = Depends(get_db)):
     return crud.delete_measurement_by_id(id, db)
