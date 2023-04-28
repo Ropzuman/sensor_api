@@ -44,11 +44,13 @@ To run this project, you will need:
     ``` bash
     uvicorn main:app --reload
     ```
+
     This will run the project on the default port 8000. If you want to run it on a different port, you can do so by adding the following flag to the command above:
 
     ``` bash
     --port 8080
     ```
+
     This will run the project on port 8080.
 
 ## Usage
