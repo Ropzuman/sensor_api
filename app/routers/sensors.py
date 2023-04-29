@@ -27,12 +27,7 @@ router = APIRouter(prefix="/Sensors")
 # Create a new sensor
 @router.get("", response_model=list[AllSensors])
 def read_sensors(name: str = "", db: Session = Depends(get_db)):
-    # Wrap the database function call in a try block to catch any exceptions
-    try:
-        return get_all_sensors(db)
-    except:
-        # If an exception is caught, raise an HTTPException with a 500 status code and a custom error message
-        raise HTTPException(status_code=500, detail="Database connection error")
+    return get_all_sensors(db)
 
 
 # Read block
@@ -42,14 +37,9 @@ def read_sensors_by_block(block: str, db: Session = Depends(get_db)):
 
 
 # Read Status
-@router.get("/{status}", response_model=list[SensorBase])
+@router.get("/sensors/{status}", response_model=list[SensorBase])
 def read_sensors_by_status(status: str, db: Session = Depends(get_db)):
-    # Wrap the database function call in a try block to catch any exceptions
-    try:
-        return read_sensor_by_status(status, db)
-    except:
-        # If an exception is caught, raise an HTTPException with a 500 status code and a custom error message
-        raise HTTPException(status_code=500, detail="Database connection error")
+    return read_sensor_by_status(status, db)
 
 
 # Read Name

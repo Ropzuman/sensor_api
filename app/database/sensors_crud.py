@@ -9,6 +9,8 @@ from .schemas import BlockPatchDB, SensorBase, StatusPatchDB
 
 # retrieves all sensors from the database using a database session object db and returns them as a list.
 def get_all_sensors(db: Session):
+    if db.query(models.Sensor).count() == 0:
+        raise HTTPException(status_code=404, detail="No sensors found")
     return db.query(models.Sensor).all()
 
 
@@ -70,9 +72,10 @@ def read_sensor_by_status(status: str, db: Session):
     sensor = (
         db.query(models.Sensor).filter(models.Sensor.status == status).all()
     )  # all sensors with a given status
-
     if not sensor:
         raise HTTPException(status_code=404, detail="Sensor not found")
+    if status == "Error":
+        print("Error detected in sensor, please check sensor")
     return sensor
 
 
