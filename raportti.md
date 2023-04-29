@@ -34,4 +34,4 @@ Tämä oli erittäin opettavainen kokemus ja odotan kyllä mielenkiinnolla mahdo
 
 Jälleen kerran erinomainen kurssi ja toivottavasti näemme vielä jonkun toisen kurssin äärellä! Kiitokset!
 
-**Roope Vähä-Aho / AEA21SP**
+- **Roope Vähä-Aho / AEA21SP**
