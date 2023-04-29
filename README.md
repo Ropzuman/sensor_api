@@ -60,12 +60,14 @@ The API has the following endpoints:
 - `/sensors` (GET): Get a list of all sensors.
 - `/sensors/<id>` (GET): Get data from a specific sensor.
 - `/sensors` (POST): Add data from a new sensor.
-- `/sensors/<id>` (PUT): Update data from a specific sensor.
+- `/sensors/<id>` (PATCH): Update data from a specific sensor.
 - `/sensors/<id>` (DELETE): Delete data from a specific sensor.
 
 The API has been designed to be used with the FastAPI Swagger UI. To access it, go to `http://localhost:8000/docs` in your browser.
 
 All responses are in JSON format.
+
+More info can be found in the spec.md file.
 
 ## Built With
 

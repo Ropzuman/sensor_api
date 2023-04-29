@@ -2,15 +2,27 @@
 
 The Sensor API is a RESTful API for managing sensor data. This document outlines the specifications for the API.
 
-## Endpoints
+## Functions
 
-The API has the following endpoints:
+The API has the following fucntions:
 
-- `/sensors` (GET): Get a list of all sensors.
-- `/sensors/<id>` (GET): Get data from a specific sensor.
-- `/sensors` (POST): Add data from a new sensor.
-- `/sensors/<id>` (PUT): Update data from a specific sensor.
-- `/sensors/<id>` (DELETE): Delete data from a specific sensor.
+- Get a list of all sensors.
+  - Returns a list of all sensors in the database with their name, block and status.
+- Get data from a specific sensor.
+  - Depending on the query parameters, returns a list of data points for the sensor with the given ID.
+  - For example querying by name will return the sensor with matching name along with its 10 latest measurements.
+- Add a new sensor.
+  - Adds a new sensor to the database.
+- Add measurements for a specific sensor.
+  - Adds measurements for the sensor with the given name.
+  - Simualtes a sensor sending data to the API.
+- Update block from a specific sensor.
+  - Updates the block for the sensor with the given ID.
+- Update status from a specific sensor.
+  - Updates the status for the sensor with the given ID.
+  - Can be used to reset a sensor that has gone into an error state.
+- Delete data from a specific sensor.
+  - Delete measurements form a specific sensor.
 
 ## Request and Response Formats
 
